@@ -1,0 +1,48 @@
+name: Dependency Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  # Pull requests: reviews changed manifests against the GitHub Advisory Database.
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Review changed dependencies for known vulnerabilities
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          deny-licenses: GPL-1.0-or-later, AGPL-1.0-or-later
+
+  # Pushes and weekly schedule: scans the whole tree (requirements.txt,
+  # package.json, pyproject.toml, lockfiles, etc.) with OSV-Scanner.
+  osv-scan:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run OSV-Scanner against the repository
+        uses: google/osv-scanner-action/osv-scanner-action@v2
+        with:
+          scan-args: |-
+            -r
+            --format=table
+            ./
+
+      - name: Surface scan result in the run summary
+        if: always()
+        run: |
+          echo "OSV-Scanner finished. A failing job means known vulnerabilities were found; inspect the log above for the affected packages and fix versions." >> $GITHUB_STEP_SUMMARY
