@@ -1,0 +1,63 @@
+name: Link Check
+
+on:
+  push:
+    branches: [main]
+    paths: ["README.md"]
+  pull_request:
+    paths: ["README.md"]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check all links in README
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # --max-redirects 0 makes any HTTP redirect a failure,
+          # so redirected URLs are reported, not silently followed.
+          args: >-
+            --verbose
+            --no-progress
+            --max-redirects 0
+            --timeout 20
+            --user-agent 'ai-trading-stack-link-checker/1.0'
+            './README.md'
+          output: lychee-report.md
+          fail: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Attach report to the run summary
+        if: always()
+        run: |
+          if [ -f lychee-report.md ]; then
+            cat lychee-report.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Open an issue when links are broken or redirected
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.existsSync('lychee-report.md')
+              ? fs.readFileSync('lychee-report.md', 'utf8')
+              : 'No report file was generated.';
+            const body = 'The README link check failed (broken or redirected URLs detected).\n\n' +
+              'Report output:\n\n```\n' + report.substring(0, 60000) + '\n```\n' +
+              'Fix or replace the flagged URLs, then re-run the workflow.';
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'README link check failed',
+              body: body
+            });
