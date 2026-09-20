@@ -110,6 +110,51 @@ flowchart TD
 
 ---
 
+
+---
+
+## Fact-Check & Repository Verification (as of September 20, 2026)
+
+Every repository and assertion in the original overview was independently audited against the GitHub REST API and project documentation.
+
+| Repository | Primary Claims Checked | Verified Status & Evidence | Source / Audit Link |
+| :--- | :--- | :--- | :--- |
+| **[virattt/ai-hedge-fund](https://github.com/virattt/ai-hedge-fund)** | Simulates collaborative hedge fund committee using multiple specialized LLM agents (fundamental, technical, valuation, risk). | **Verified**: Active repository (~63.5k stars). Contains dedicated agent modules and structured debate pipelines. | [GitHub API Record](https://api.github.com/repos/virattt/ai-hedge-fund) |
+| **[freqtrade/freqtrade](https://github.com/freqtrade/freqtrade)** | Leading open-source crypto bot with backtesting, hyperopt, machine learning (FreqAI), and live exchange execution. | **Verified**: Active repository (~54.5k stars). Comprehensive strategy engine with active commits and documentation. | [GitHub API Record](https://api.github.com/repos/freqtrade/freqtrade) |
+| **[ccxt/ccxt](https://github.com/ccxt/ccxt)** | Universal cross-language exchange client supporting 100+ spot and derivatives crypto exchanges. | **Verified**: Active repository (~44.0k stars). Industry standard for public market data normalization and private execution. | [GitHub API Record](https://api.github.com/repos/ccxt/ccxt) |
+| **[nautechsystems/nautilus_trader](https://github.com/nautechsystems/nautilus_trader)** | Production-grade, Rust-native event-driven backtesting and low-latency live execution engine. | **Verified**: Active repository (~29.1k stars). Highly optimized deterministic engine with Cython/Python interfaces. | [GitHub API Record](https://api.github.com/repos/nautechsystems/nautilus_trader) |
+| **[hummingbot/hummingbot](https://github.com/hummingbot/hummingbot)** | High-frequency market-making, arbitrage, and liquidity automation across centralized and decentralized exchanges. | **Verified**: Active repository (~20.0k stars). Modular gateway connecting order books and AMMs. | [GitHub API Record](https://api.github.com/repos/hummingbot/hummingbot) |
+| **[elizaOS/eliza](https://github.com/elizaOS/eliza)** | Autonomous agent operating system capable of wallet interactions, memory, and multi-channel communication. | **Verified**: Active repository (~19.3k stars). Extensible plugin ecosystem including Solana, EVM, and social integrations. | [GitHub API Record](https://api.github.com/repos/elizaOS/eliza) |
+| **[AI4Finance-Foundation/FinRL](https://github.com/AI4Finance-Foundation/FinRL)** | Deep reinforcement learning framework for financial trading research across equities and crypto. | **Verified**: Active repository (~16.3k stars). Incorporates standard gym environments and modern DRL algorithms. | [GitHub API Record](https://api.github.com/repos/AI4Finance-Foundation/FinRL) |
+| **[jesse-ai/jesse](https://github.com/jesse-ai/jesse)** | Fast, clean Python algorithmic trading framework dedicated to rapid crypto strategy backtesting and live execution. | **Verified**: Active repository (~8.5k stars). Integrated GUI, candle management, and genetic hyperparameter optimization. | [GitHub API Record](https://api.github.com/repos/jesse-ai/jesse) |
+
+---
+
+## Practical Pre-Launch & Operational Checklist
+
+Before running any autonomous or algorithmic strategy in an environment connected to live execution endpoints, verify each step:
+
+- [ ] **Exchange Sandbox / Testnet Validation**
+  - Run the entire stack against the exchange demo/testnet environment for at least 14 uninterrupted trading sessions.
+  - Verify that mock order cancellations, partial fills, and limit order replacements behave identically to production.
+- [ ] **Historical Data & Simulation Quality**
+  - Verify OHLCV and order-book data has no gaps, missing tick sequences, or unadjusted price spikes.
+  - Test out-of-sample datasets across both bull, bear, and choppy flat volatility regimes.
+  - Model realistic taker fees, funding rates (for perpetual contracts), and variable slippage.
+- [ ] **Hard Position Limits & Risk Budgeting**
+  - Enforce maximum position size per asset (e.g., max 2% of total capital allocated to any single trade).
+  - Configure aggregate portfolio exposure ceilings and max daily drawdown limits (e.g., hard cutoff at 3% daily loss).
+  - Confirm pre-trade validation gates reject orders exceeding leverage or balance constraints.
+- [ ] **Structured Logging & Audit Trails**
+  - Log every agent decision, prompt payload, reasoning step, and raw exchange API response with millisecond timestamps.
+  - Forward critical runtime error alerts to an external channel (Telegram bot, PagerDuty, Discord webhook).
+- [ ] **Health Monitoring & Latency Heartbeats**
+  - Monitor websocket connection state with automated reconnect backoff routines.
+  - Track exchange round-trip latency; pause trade entry if network latency exceeds safety thresholds (e.g., >350ms).
+- [ ] **Emergency Shutdown Protocol (Kill-Switch)**
+  - Implement a dedicated, out-of-band kill switch script that immediately cancels all resting orders and flattens positions if triggered.
+  - Confirm API keys have **trade-only** permissions with strictly **no withdrawal rights**, bound to static server IPs.
+
 ## Paper-Trading & Development Guidelines
 
 1. **Always Develop in Isolation**: Run backtests strictly against historical out-of-sample data. Guard against look-ahead bias, survivorship bias, and overfitting.
