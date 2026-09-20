@@ -8,7 +8,53 @@ A comprehensive, curated guide to foundational open-source architecture for auto
 
 A robust algorithmic trading system separates concerns into distinct, modular layers to ensure deterministic risk bounds, low-latency execution, and isolated AI reasoning.
 
+```mermaid
+flowchart TD
+    subgraph DataLayer [1. Market Data & Ingestion]
+        D1[L1/L2 Order Books & Trades]
+        D2[Historical OHLCV Data]
+        D3[Alternative Data & Sentiment]
+        D4[CCXT Unified Feed]
+    end
 
+    subgraph StrategyLayer [2. Strategy & Alpha Modeling]
+        S1[Multi-Agent Consensus - AI Hedge Fund]
+        S2[Deep Reinforcement Learning - FinRL]
+        S3[Technical & Statistical Indicators - FreqAI / Jesse]
+    end
+
+    subgraph BacktestingLayer [3. Simulation & Validation]
+        B1[Tick-Level Deterministic Simulation - NautilusTrader]
+        B2[Fast Event-Driven Backtesting - Jesse]
+        B3[Walk-Forward & Hyperparameter Optimization - Freqtrade]
+    end
+
+    subgraph RiskLayer [4. Risk Controls & Safety Gates]
+        R1[Pre-Trade Risk Checks & Max Drawdown Limits]
+        R2[Position Sizing & Portfolio Allocation]
+        R3[Kill-Switch & Latency Monitoring]
+    end
+
+    subgraph ExecutionLayer [5. Order Routing & Liquidity]
+        E1[High-Frequency Order Routing - NautilusTrader]
+        E2[Market Making & Arbitrage - Hummingbot]
+        E3[Multi-Exchange Direct APIs - CCXT]
+    end
+
+    subgraph AgentLayer [6. Autonomous Agent & On-Chain Layer]
+        A1[Multi-Platform Agent Runtime - ElizaOS]
+        A2[Non-Custodial Wallet Interactions]
+        A3[Social & Ecosystem Automation]
+    end
+
+    DataLayer --> StrategyLayer
+    StrategyLayer --> BacktestingLayer
+    BacktestingLayer -.-> StrategyLayer
+    StrategyLayer --> RiskLayer
+    RiskLayer --> ExecutionLayer
+    AgentLayer <--> RiskLayer
+    AgentLayer <--> ExecutionLayer
+```
 
 ---
 
@@ -18,7 +64,7 @@ A robust algorithmic trading system separates concerns into distinct, modular la
 * **[virattt/ai-hedge-fund](https://github.com/virattt/ai-hedge-fund)**  
   * **Layer:** Strategy & Decision Making  
   * **Focus:** Multi-agent collaborative decision making  
-  * **Overview:** Coordinates specialized LLM agents (Warren Buffett style fundamental analysis, technical analysis, valuation, market sentiment, and risk management) that debate and critique individual trade theses before issuing sizing and direction decisions.
+  * **Overview:** Coordinates specialized LLM agents (fundamental analysis, technical analysis, valuation, market sentiment, and risk management) that debate trade theses before reaching consensus on sizing and direction.
 
 ### 2. Strategy Development & Automated Bot Engine
 * **[freqtrade/freqtrade](https://github.com/freqtrade/freqtrade)**  
