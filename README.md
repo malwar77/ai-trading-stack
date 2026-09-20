@@ -1,5 +1,9 @@
 # 8 GitHub Repos for Building an AI Trading Stack
 
+[![Link Check](https://github.com/malwar77/ai-trading-stack/actions/workflows/link-check.yml/badge.svg)](https://github.com/malwar77/ai-trading-stack/actions/workflows/link-check.yml)
+[![Dependency Scan](https://github.com/malwar77/ai-trading-stack/actions/workflows/dependency-scan.yml/badge.svg)](https://github.com/malwar77/ai-trading-stack/actions/workflows/dependency-scan.yml)
+
+
 A comprehensive, curated guide to foundational open-source architecture for autonomous, algorithmic, and AI-driven quantitative trading systems.
 
 ---
@@ -163,6 +167,13 @@ Before running any autonomous or algorithmic strategy in an environment connecte
 4. **API Key Isolation**: Never grant withdrawal permissions to automated trading API keys. Restrict API keys to specific IP addresses and rotate secrets regularly.
 
 ---
+
+
+---
+
+## Contributing & Maintenance
+
+* Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on updating link checks, managing automated workflow failures, and submitting new quantitative frameworks.
 
 ## Critical Risk Disclaimer & Warning
 
